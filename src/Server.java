@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Server extends Thread {
     private ServerSocket serverSocket;
@@ -12,6 +13,8 @@ public class Server extends Thread {
     String command;
     String serverMessage;
 
+    protected Boolean logged_on = false;
+
     DataInputStream in;
     DataOutputStream out;
 
@@ -19,6 +22,7 @@ public class Server extends Thread {
         Socket client;
         public void run(Socket newClient) {
             // allt från Server:s run() häri!
+
         }
     }
 
@@ -57,6 +61,31 @@ public class Server extends Thread {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        login login = new login();
+        register register = new register();
+
+        System.out.println("Just before Scanner.");
+        Scanner menu_scanner = new Scanner(System.in);
+        int choice = menu_scanner.nextInt();
+
+        System.out.println("Enter a choice. \n 1. For register \n 2. For login");
+
+        try {
+            while(logged_on = false)
+                switch (choice) {
+                    case 1:
+                        register.registerUser();
+                        break;
+                    case 2:
+                        login.logon();
+                        logged_on = true;
+                        break;
+                }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
         while (true) {
             Boolean hostIsBusy = false;
             try {

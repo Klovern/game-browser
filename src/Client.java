@@ -10,7 +10,6 @@ public class Client extends Thread {
     protected Socket client;
     protected BufferedReader in;
     protected Boolean keepInLoop;
-    protected Boolean logged_on = false;
 
 
     public Client(String hostName, int ip) {
@@ -32,7 +31,31 @@ public class Client extends Thread {
     public void run() {
         // will listen to response from server.
 
+        // Login/register strings here.
 
+
+        try {
+            OutputStream outToServer = this.client.getOutputStream();
+            DataOutputStream User_info_out = new DataOutputStream(outToServer);
+
+            InputStream inFromServer = client.getInputStream();
+            DataInputStream User_info_in = new DataInputStream(inFromServer);
+            Scanner scan = new Scanner(System.in);
+            String str = scan.next();
+
+            try {
+                User_info_out.writeUTF(str);
+                User_info_out.flush();
+                System.out.println(User_info_in.readUTF());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         while (keepInLoop) {
             System.out.println("Client is listening! ");
@@ -40,19 +63,7 @@ public class Client extends Thread {
 
             try {
 
-                Scanner menuscanner = new Scanner(System.in);
-                int choice = menuscanner.nextInt();
 
-                while(logged_on = false)
-                    switch (choice) {
-                        case 1:
-                            register.registerUser();
-                            break;
-                        case 2:
-                            login.logon();
-                            logged_on = true;
-                            break;
-                    }
 
                 OutputStream outToServer = this.client.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outToServer);

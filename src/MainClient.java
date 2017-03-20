@@ -7,7 +7,7 @@ import java.net.InetAddress;
 public class MainClient {
 
     public static void main(String[] args){
-        int port = 1200;
+        int port = 1300;
 
         // Connects localhost to the server
         try {

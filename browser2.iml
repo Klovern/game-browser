@@ -7,5 +7,20 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../commons-codec-1.10" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file://$MODULE_DIR$/../../commons-codec-1.10/apidocs" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../commons-codec-1.10" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../../commons-codec-1.10" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../commons-codec-1.10" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>
