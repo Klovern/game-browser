@@ -34,28 +34,7 @@ public class Client extends Thread {
         // Login/register strings here.
 
 
-        try {
-            OutputStream outToServer = this.client.getOutputStream();
-            DataOutputStream User_info_out = new DataOutputStream(outToServer);
 
-            InputStream inFromServer = client.getInputStream();
-            DataInputStream User_info_in = new DataInputStream(inFromServer);
-            Scanner scan = new Scanner(System.in);
-            String str = scan.next();
-
-            try {
-                User_info_out.writeUTF(str);
-                User_info_out.flush();
-                System.out.println(User_info_in.readUTF());
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         while (keepInLoop) {
             System.out.println("Client is listening! ");

@@ -22,5 +22,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../../commons-codec-1.10" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="commons-codec-1" level="project" />
   </component>
 </module>

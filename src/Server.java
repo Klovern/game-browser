@@ -51,9 +51,8 @@ public class Server extends Thread {
         DataInputStream in; DataOutputStream out;
     }
 
+
     public void run() {
-        ClientHandler newClient = new ClientHandler(client);
-        clients.add(newClient);
 
         try {
             in = new DataInputStream(client.getInputStream());
@@ -72,7 +71,7 @@ public class Server extends Thread {
         System.out.println("Enter a choice. \n 1. For register \n 2. For login");
 
         try {
-            while(logged_on = false)
+            while(logged_on == false)
                 switch (choice) {
                     case 1:
                         register.registerUser();
@@ -85,6 +84,12 @@ public class Server extends Thread {
         } catch (IOException e){
             e.printStackTrace();
         }
+
+        ClientHandler newClient = new ClientHandler(client);
+        clients.add(newClient);
+
+
+
 
         while (true) {
             Boolean hostIsBusy = false;
