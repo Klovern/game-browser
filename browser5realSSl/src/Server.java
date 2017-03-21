@@ -17,6 +17,8 @@ public class Server extends Thread {
     String command;
     String serverMessage;
 
+    protected Boolean logged_on = false;
+
     DataInputStream in;
     DataOutputStream out;
 
@@ -57,8 +59,41 @@ public class Server extends Thread {
     public void run() {
         ClientHandler newClient = new ClientHandler(client);
 
-        // Daniels kod
 
+        // Daniels Kåd Börjar Här
+        login login = new login();
+        register register = new register();
+
+        try {
+            command = null;
+//                new SendMessage(clients);
+            System.out.println("Just connected to " + client.getRemoteSocketAddress());
+
+            command = in.readUTF().toString();
+            System.out.println("Command from client: " + command);
+
+            System.out.println("I'm tryin' here!");
+            while(!logged_on)
+                if (command.substring(0,6).contains("/logon")){
+
+                    String username = "Harold";
+                    String password = "Smith";
+                    login.logon(username, password);
+                    out.writeUTF("Logging on... ");
+                    logged_on = true;
+                    break;
+                } else if (command.substring(0,9).contains("/register")){
+                    String username = "Harold";
+                    String password = "Smith";
+                    register.registerUser(username, password);
+                    break;
+                }
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        //Daniels Kod Slutar Här
+        
         clients.add(newClient);
 
         try {
