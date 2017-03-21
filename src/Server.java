@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
+import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,23 +65,31 @@ public class Server extends Thread {
         login login = new login();
         register register = new register();
 
-        System.out.println("Just before Scanner.");
-        Scanner menu_scanner = new Scanner(System.in);
-        int choice = menu_scanner.nextInt();
-
-        System.out.println("Enter a choice. \n 1. For register \n 2. For login");
-
         try {
-            while(logged_on == false)
-                switch (choice) {
-                    case 1:
-                        register.registerUser();
-                        break;
-                    case 2:
-                        login.logon();
-                        logged_on = true;
-                        break;
+            command = null;
+//                new SendMessage(clients);
+            System.out.println("Just connected to " + client.getRemoteSocketAddress());
+
+            command = in.readUTF().toString();
+            System.out.println("Command from client: " + command);
+
+            System.out.println("I'm tryin' here!");
+            while(!logged_on)
+                if (command.substring(0,6).contains("/logon")){
+
+                    String username = "Harold";
+                    String password = "Smith";
+                    login.logon(username, password);
+                    out.writeUTF("Logging on... ");
+                    logged_on = true;
+                    break;
+                } else if (command.substring(0,9).contains("/register")){
+                    String username = "Harold";
+                    String password = "Smith";
+                    register.registerUser(username, password);
+                    break;
                 }
+
         } catch (IOException e){
             e.printStackTrace();
         }

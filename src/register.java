@@ -18,10 +18,10 @@ public class register extends Encryption {
     static final String PASS = "43g_Sdff*SDFFdrf3sd";
     protected static final String String = null;
 
-    public void registerUser() {
+    public void registerUser(String username,String password) {
 
 
-        ClientHandler handler = new ClientHandler(client);
+        //ClientHandler handler = new ClientHandler(client);
 
         Wrapper conn = null;
         try {
@@ -33,7 +33,7 @@ public class register extends Encryption {
         try  //try block
         {
             //declare variables
-
+            /*
             Scanner reader = new Scanner(System.in);
             System.out.println("Write your Name");
             String username = reader.nextLine();
@@ -41,7 +41,7 @@ public class register extends Encryption {
             String password = reader.nextLine();
             System.out.println(username);
             System.out.println(password);
-
+            */
 
             // variables for encryption & encryption
             String key = "Bar12345Bar12345"; // 128 bit key
@@ -53,8 +53,8 @@ public class register extends Encryption {
                 System.out.println("name or password or Role is wrong");
             } else  //else insert query is run properly
             {
-                String IQuery = "INSERT INTO `hub_demo`.`userdetails`(`username`,`password`,`timestamp`) VALUES('" + username + "', '" + password + "',current_timestamp)";
-                System.out.println(IQuery);//print on console
+                String IQuery = "INSERT INTO `hub_demo`.`userdetails`(`username`,`password`,`timestamp`) VALUES('" + username + "', '" + cryptedString + "',current_timestamp)";
+                // System.out.println(IQuery); //print on console
                 System.out.println("Connecting to a selected database...");
 
                 //STEP 3: Open a connection
