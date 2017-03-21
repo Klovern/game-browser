@@ -1,0 +1,12 @@
+keytool -genkey -keystore mySrvKeystore -keyalg RSA
+javac *MainServer.javas
+javac *Mainclient.java
+
+
+PASSWORDS = 123456
+
+SSL SERVER
+java -Djavax.net.ssl.keyStore=mySrvKeystore -Djavax.net.ssl.keyStorePassword=123456 MainServer
+
+SSL CLIENT
+java -Djavax.net.ssl.trustStore=mySrvKeystore -Djavax.net.ssl.trustStorePassword=123456 EchoClient
