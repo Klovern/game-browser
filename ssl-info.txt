@@ -1,12 +1,39 @@
-keytool -genkey -keystore mySrvKeystore -keyalg RSA
-javac *MainServer.java
-javac *Mainclient.java
+https://slproweb.com/products/Win32OpenSSL.html
 
+Lägg till i pathen.
 
-PASSWORDS = 123456
+Serverns nyckellager:
+   Skapa ett tomt nyckellager:
+      keytool -genkey -alias Serv -keystore ServerKeyStore.jks -keyalg RSA -sigalg SHA1withRSA
+   Extrahera ett CSR (certificate signing request), att signera på CA:n:
+      keytool -certreq -alias Serv -keystore ServerKeyStore.jks -file Serv.csr
+
+CA-certifikat:
+   Skapa privat nyckel till CA-servern och samtidigt en certifikatsbegäran:
+      openssl req -new -keyout cakey.pem -out careq.pem -config C:\OpenSSL-Win64\bin\openssl.cfg
+   på Linux:
+      openssl req -new -keyout cakey.pem -out careq.pem -config /etc/ssl/openssl.cnf
+   Skapa ett rootcert:
+      openssl x509 -signkey cakey.pem -req -days 3650 -in careq.pem -out caroot.cer -extensions v3_ca
+   Signera serverns CSR, och generera en certifikatsfil:
+      echo 1234 > serial.txt
+      openssl x509 -CA caroot.cer -CAkey cakey.pem -CAserial serial.txt -req -in Serv.csr -out ServerTestCA.cer -days 365
+
+Serverns nyckellager:
+   Lägg till caroot.cer till serverns nyckellager:
+      keytool -import -alias CArootCA -file caroot.cer -keystore ServerKeyStore.jks
+   Lägg till den egna signerade certifikatsfilen:
+      keytool -import -alias Serv -file ServerTestCA.cer -keystore ServerKeyStore.jks
+
+Klientens nyckellager:
+   Skapa ett nyckellager, som innehåller CA-rootcertet:
+      keytool -import -keystore ClientKeyStore.jks -alias testca -file caroot.cer
+
+SERVER PASSWORD = 1658728
+CLIENT PASSWORD = 8725816
 
 SSL SERVER
-java -Djavax.net.ssl.keyStore=mySrvKeystore -Djavax.net.ssl.keyStorePassword=123456 MainServer
+java -Djavax.net.ssl.keyStore=ServerKeyStore.jks -Djavax.net.ssl.keyStorePassword=1658728 MainServer
 
 SSL CLIENT
-java -Djavax.net.ssl.trustStore=mySrvKeystore -Djavax.net.ssl.trustStorePassword=123456 MainClient
+java -Djavax.net.ssl.trustStore=ClientKeyStore.jks -Djavax.net.ssl.trustStorePassword=8725816 MainClient
