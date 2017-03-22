@@ -1,6 +1,6 @@
 https://slproweb.com/products/Win32OpenSSL.html
 
-Lägg till i pathen.
+Lägg till "C:\OpenSSL-Win64\bin" i pathen.
 
 Serverns nyckellager:
    Skapa ett tomt nyckellager:
