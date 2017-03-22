@@ -59,11 +59,21 @@ public class Server extends Thread {
     public void run() {
         ClientHandler newClient = new ClientHandler(client);
 
+        clients.add(newClient);
+
+        try {
+            in = new DataInputStream(client.getInputStream());
+            out = new DataOutputStream(client.getOutputStream());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        HandlerUserInput(newClient);
+
 
         // Daniels Kåd Börjar Här
         login login = new login();
         register register = new register();
-
         try {
             command = null;
 //                new SendMessage(clients);
@@ -93,17 +103,7 @@ public class Server extends Thread {
             e.printStackTrace();
         }
         //Daniels Kod Slutar Här
-        
-        clients.add(newClient);
 
-        try {
-            in = new DataInputStream(client.getInputStream());
-            out = new DataOutputStream(client.getOutputStream());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        HandlerUserInput(newClient);
 
         /* User user = logon();  Register / login - Dan
         while(!user == null){
