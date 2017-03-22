@@ -1,9 +1,6 @@
-Steg 1. Ladda ner och installera openssl från för 32 eller 64 bitar 
 https://slproweb.com/products/Win32OpenSSL.html
 
-Ste2 2. Lägg till "C:\OpenSSL-Win64\bin" i pathen.
-
-Steg 3. Följ TomKi's insturktioner om ssl keystores och certificates
+Lägg till "C:\OpenSSL-Win64\bin" i pathen.
 
 Serverns nyckellager:
    Skapa ett tomt nyckellager:
@@ -32,7 +29,6 @@ Klientens nyckellager:
    Skapa ett nyckellager, som innehåller CA-rootcertet:
       keytool -import -keystore ClientKeyStore.jks -alias testca -file caroot.cer
 
-Steg 4. Kör följande värden och paramterar när du startar serverarna.
 SERVER PASSWORD = 1658728
 CLIENT PASSWORD = 8725816
 
