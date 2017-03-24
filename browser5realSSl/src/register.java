@@ -12,16 +12,16 @@ import java.util.Scanner;
 public class register extends Encryption {
     // database URL
     static final String DB_URL = "jdbc:mysql://localhost/hub_demo";
-    protected Socket client;
     //  Database credentials
     static final String USER = "root";
     static final String PASS = "43g_Sdff*SDFFdrf3sd";
     protected static final String String = null;
+    protected Socket client;
 
     public void registerUser(String username,String password) {
 
 
-        //ClientHandler handler = new ClientHandler(client);
+        ClientHandler handler = new ClientHandler(client);
 
         Wrapper conn = null;
         try {
@@ -69,6 +69,9 @@ public class register extends Encryption {
                 System.out.println(SMessage);
                 //close connection
                 ((java.sql.Connection) conn).close();
+
+                //handler.setUsername(username);
+                //handler.setPassword(password);
             }
         } catch (SQLException se) {
             //handle errors for JDBC

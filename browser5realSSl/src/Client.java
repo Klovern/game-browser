@@ -49,7 +49,6 @@ public class Client extends Thread {
             e.printStackTrace();
         }
 
-        // Daniels kod innan KeepInLoop
         while (keepInLoop) {
             try {
                 keepInLoop = SendUserInput(streamOut, streamIn);

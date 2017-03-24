@@ -9,14 +9,11 @@ import static java.lang.System.out;
  * Created by Daniel on 2017-03-08.
  */
 public class login extends Encryption{
-
     protected Socket client;
-    private String username;
-    private String password;
 
     public void logon(String username,String password) throws IOException {
 
-       // ClientHandler handler = new ClientHandler(client);
+        // ClientHandler handler = new ClientHandler(client);
 
         /*Scanner reader = new Scanner(System.in);
         System.out.println("Write your Name");
@@ -29,9 +26,6 @@ public class login extends Encryption{
         String key = "Bar12345Bar12345"; // 128 bit key
         String initVector = "RandomInitVector"; // 16 bytes IV
         String cryptedString = encrypt(key, initVector, password);
-
-        // System.out.println(password);
-        System.out.println("Crypted password: "+cryptedString);
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -46,14 +40,14 @@ public class login extends Encryption{
             else {
                 out.println("Incorrect login credentials");
             }
-
+            // handler.setUsername(username);
+            // handler.setPassword(password);
         }
         catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
 
-        //handler.SetPassword(password);
-        //handler.SetUsername(username);
+
     }
 }
 

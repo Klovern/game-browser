@@ -33,7 +33,7 @@ SERVER PASSWORD = 1658728
 CLIENT PASSWORD = 8725816
 
 SSL SERVER
-java -Djavax.net.ssl.keyStore=ServerKeyStore.jks -Djavax.net.ssl.keyStorePassword=1658728 MainServer
+java -cp ".;./Jar/commons-codec-1.10.jar .;./Jar/mysql-connector-java-5.1.18-bin.jar" -Djavax.net.ssl.keyStore=ServerKeyStore.jks -Djavax.net.ssl.keyStorePassword=1658728 MainServer
 
 SSL CLIENT
 java -Djavax.net.ssl.trustStore=ClientKeyStore.jks -Djavax.net.ssl.trustStorePassword=8725816 MainClient
