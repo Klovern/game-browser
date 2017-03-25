@@ -20,7 +20,7 @@ public class Client extends Thread {
 
 
     public Client(String hostName, int ip) throws Exception{
-        System.out.println("Client initilized!");
+        System.out.println("Client initilized! You login by typing /login Username Password eller regristerar dig med /register Username Password ett tomma kommandon buggar ur. ");
         keepInLoop = true;
         try {
             this.sf = SSLSocketFactory.getDefault();

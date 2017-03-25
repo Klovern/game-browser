@@ -13,10 +13,12 @@ public class Server extends Thread {
     protected List<ClientHandler> clients;
     protected List<GameRoom> gameRooms;
     protected SSLServerSocketFactory ssf;
+    protected User u;
     String command;
     String serverMessage;
 
     protected Boolean logged_on = false;
+    protected Boolean nameBusy = false;
 
     DataInputStream in;
     DataOutputStream out;
@@ -61,9 +63,7 @@ public class Server extends Thread {
     }
 
     public void run() {
-        ClientHandler newClient = new ClientHandler(client);
-
-        clients.add(newClient);
+        //String loginCommand;
 
         try {
             in = new DataInputStream(client.getInputStream());
@@ -72,12 +72,59 @@ public class Server extends Thread {
             e.printStackTrace();
         }
 
+        ClientHandler newClient = new ClientHandler(client);
+
+
+        //sets the user that is returned in login
+            while (!logged_on){
+                try {
+                    command = null;
+                    command = in.readUTF();
+                    login login = new login();
+                    register register = new register();
+
+//                new SendMessage(clients);
+                    System.out.println("Just connected to " + client.getRemoteSocketAddress());
+                    System.out.println("Command from client: " + command);
+
+
+                    if (command.contains("/login")) {
+                        String works = command;
+                        String[] parts = works.split(" ");
+                        String part1 = parts[1]; // Username
+                        String part2 = parts[2]; // Password
+                        String username = part1;
+                        String password = part2;
+                        System.out.print("This is username: " + username);
+                        System.out.print("This is password: " + password);
+                        User u = login.logon(username, password);
+                        out.writeUTF("Logged on as... " + username + ".");
+                        break;
+                    } else if (command.contains("/register"))  {
+                        String works = command;
+                        String[] parts = works.split(" ");
+                        String part1 = parts[1]; // Username
+                        String part2 = parts[2]; // Password
+                        String username = part1;
+                        String password = part2;
+                        register.registerUser(username, password);
+                        out.writeUTF("Registerd on as... " + username + ".");
+                        break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        newClient.setUser(u);
+        System.out.println(newClient.user);
+        clients.add(newClient);
+
+
+
         HandlerUserInput(newClient);
 
-
-        // Daniels Kåd Börjar Här
-
-        //Daniels Kod Slutar Här
 
 
         /* User user = logon();  Register / login - Dan
@@ -88,51 +135,15 @@ public class Server extends Thread {
     }
 
     public void HandlerUserInput(ClientHandler newClient) {
+        newClient.isBusy = false;
         while (true) {
-            newClient.isBusy = false;
+
             serverMessage = "";
             command = null;
 
             try {
+
                 command = in.readUTF();
-                login login = new login();
-                register register = new register();
-
-//                new SendMessage(clients);
-                System.out.println("Just connected to " + client.getRemoteSocketAddress());
-
-                command = in.readUTF().toString();
-                System.out.println("Command from client: " + command);
-
-
-                if (command.contains("/login")) {
-                    String works = command;
-                    String[] parts = works.split(" ");
-                    String part1 = parts[1]; // Username
-                    String part2 = parts[2]; // Password
-                    String username = part1;
-                    String password = part2;
-                    System.out.print("This is username: " + username);
-                    System.out.print("This is password: " + password);
-                    login.logon(username, password);
-                    out.writeUTF("Logged on as... " + username + ".");
-                } else if (command.contains("/register")) {
-                    String works = command;
-                    String[] parts = works.split(" ");
-                    String part1 = parts[1]; // Username
-                    String part2 = parts[2]; // Password
-                    String username = part1;
-                    String password = part2;
-                    register.registerUser(username, password);
-                    out.writeUTF("Registerd on as... " + username + ".");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-
-                //command = in.readUTF();
                 System.out.println("Command from client: " + command);
 
                 if (command.matches("/refresh")) {
@@ -148,58 +159,103 @@ public class Server extends Thread {
                         out.writeUTF(serverMessage);
                     }
                 } else if (command.matches("/create")) {
-                    for (GameRoom game : gameRooms) {
-                        if (game.host.equals(newClient)) {
-                            out.writeUTF("You have already an active room!");
-                            newClient.isBusy = true;
-                        }
-                    }
-                    if (!newClient.isBusy) {
-                        gameRooms.add(new GameRoom("test", 2, newClient));
-                        out.writeUTF("A new gameroom has been created. . . \n Searching for client to connect. . . " + command);
+                }
+                for (GameRoom game : gameRooms) {
+                    if (game.host.equals(newClient)) {
+                        out.writeUTF("You have already an active room!");
                         newClient.isBusy = true;
                     }
-
-                } else if (command.contains("/join")) {
-                    for (GameRoom gm : gameRooms) {
-                        if (gm.roomName.matches(command.substring(6))) {
-                            if (newClient.isBusy) {
-                                out.writeUTF("You are already connected to a room, write /leave to leave");
-                            }
-                            if (!gm.connectedClients.contains(newClient)) {
-                                newClient.isBusy = true;
-                                gm.connectedClients.add(newClient);
-                                out.writeUTF("Connecting to room. " + command);
-                            }
-                        } else {
-                            out.writeUTF("No rooms with the specified name was found.");
-                        }
-
-                    }
-
-                } else if (command.contains("/leave")) {
-                    for (GameRoom gm : gameRooms) {
-                        if (gm.connectedClients.contains(newClient)) {
-
-
-                        } else {
-                            out.writeUTF("No rooms with the specified name was found.");
-                        }
-
-                    }
-
-                } else if (command.matches("/message")) {
-                    for (GameRoom gm : gameRooms) {
-                        if (gm.connectedClients.contains(newClient)) {
-                            SendMessage sm = new SendMessage(gm.connectedClients, command);
-                            // out.writeUTF("Message to clients:  " +command);
-                        }
-                    }
-
-                } else {
-                    out.writeUTF("Could not find any matching commands for: " + command);
                 }
-                command = null;
+                if (!newClient.isBusy) {
+                    try {
+                        for (GameRoom gm: gameRooms) {
+                            if(gm.roomName.matches(command.substring(8))){
+                                nameBusy = true;
+                                break;
+                            }
+                        }
+                        if(!nameBusy) {
+                            gameRooms.add(new GameRoom(command.substring(8), 4, newClient));
+                            out.writeUTF("A new gameroom has been created. . . \n Searching for client to connect. . . ");
+                            newClient.isBusy = true;
+                        }
+                        else {
+                            out.writeUTF("Roomname already found in list.");
+                        }
+                    }catch (Exception e) {
+                        out.writeUTF("No roomname.");
+                    }
+
+                }
+                else if (command.contains("/join")) {
+                    Boolean roomFound = true;
+                    if (!gameRooms.isEmpty()) {
+                        for (GameRoom gm : gameRooms) {
+                            try {
+                                if (gm.roomName.matches(command.substring(6))) {
+                                    if (newClient.isBusy) {
+                                        out.writeUTF("You are already connected to a room, write /leave to leave");
+                                        break;
+                                    } else if (gm.connectedClients.size() >= gm.maxUsers) {
+                                        out.writeUTF("Room is full!");
+                                        break;
+                                    } else if (!gm.connectedClients.contains(newClient)) {
+                                        newClient.isBusy = true;
+                                        gm.connectedClients.add(newClient);
+                                        out.writeUTF("Connecting to room: " + gm.roomName);
+                                        break;
+                                    }
+                                }
+                                else {
+                                    roomFound = false;
+                                }
+                            }catch (Exception e){
+
+                                break;
+                            }
+
+                        }
+
+                    }else{
+                        if (!roomFound){
+                            out.writeUTF("Cannot find your requested room");
+                        } else {
+                            out.writeUTF("There were no rooms found in the list.");
+                        }
+                    }
+
+                }
+                else if (command.matches("/leave")) {
+                    try {
+                        if (!gameRooms.isEmpty() && newClient.isBusy) {
+                            for (GameRoom gm : gameRooms) {
+                                if (gm.connectedClients.contains(newClient)) {
+                                    if (gm.host.equals(newClient)) {
+                                        for (ClientHandler g : gm.connectedClients) {
+                                            g.isBusy = false;
+                                        }
+                                        gameRooms.remove(gm);}
+                                    gm.connectedClients.remove(newClient);
+                                    newClient.isBusy = false;
+                                    out.writeUTF("You left: " + gm.roomName);
+                                    break;
+                                }
+                            }
+                        }
+                        else{
+                            out.writeUTF("Roomlist is empty or no room to leave.");
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+
+                } else if (command.matches("/help")) {
+                    out.writeUTF("/create [roomname] \t /join [roomname] \t /leave \t /refresh");
+                }
+                else{
+                    out.writeUTF("Could not find any matching commands for: " +command);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

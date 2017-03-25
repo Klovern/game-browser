@@ -7,8 +7,7 @@ public class ClientHandler {
     protected Socket client;
     protected boolean isBusy;
     protected PrintWriter out;
-    // protected String Password;
-    // protected String Username;
+    protected User user;
 
     /*
     public void setPassword(String password) {
@@ -28,4 +27,9 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
+    public void setUser(User u){
+        this.user = u;
+    }
 }
+
+

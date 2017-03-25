@@ -16,12 +16,11 @@ public class register extends Encryption {
     static final String USER = "root";
     static final String PASS = "43g_Sdff*SDFFdrf3sd";
     protected static final String String = null;
-    protected Socket client;
 
     public void registerUser(String username,String password) {
 
 
-        ClientHandler handler = new ClientHandler(client);
+        //ClientHandler handler = new ClientHandler(client);
 
         Wrapper conn = null;
         try {
@@ -69,7 +68,6 @@ public class register extends Encryption {
                 System.out.println(SMessage);
                 //close connection
                 ((java.sql.Connection) conn).close();
-
                 //handler.setUsername(username);
                 //handler.setPassword(password);
             }

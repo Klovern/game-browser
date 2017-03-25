@@ -9,9 +9,10 @@ import static java.lang.System.out;
  * Created by Daniel on 2017-03-08.
  */
 public class login extends Encryption{
-    protected Socket client;
+    protected User user;
 
-    public void logon(String username,String password) throws IOException {
+    public User logon(String username,String password) throws IOException {
+
 
         // ClientHandler handler = new ClientHandler(client);
 
@@ -32,19 +33,24 @@ public class login extends Encryption{
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/hub_demo", "root", "43g_Sdff*SDFFdrf3sd");
             PreparedStatement pst = conn.prepareStatement("Select username,password from userdetails where username=? and password=?");
             pst.setString(1, username);
-            pst.setString(2, password);
+            pst.setString(2, cryptedString);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
+                this.user = new User(username);
                 out.println("Correct login credentials");
+                return this.user;
             }
             else {
                 out.println("Incorrect login credentials");
+                System.exit(0);
+                return null;
+
             }
-            // handler.setUsername(username);
-            // handler.setPassword(password);
         }
         catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            System.exit(0);
+            return null;
         }
 
 
